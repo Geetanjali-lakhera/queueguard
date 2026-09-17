@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   redis:
     image: redis:7-alpine
@@ -30,6 +28,18 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+
+  queue-service:
+    build: ./queue-service
+    container_name: queueguard-queue
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
 
 volumes:
   redis_data:
